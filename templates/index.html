@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Communication Skills Scorer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        h1 {
+            color: #2d3748;
+            margin-bottom: 8px;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            color: #718096;
+            margin-bottom: 32px;
+            font-size: 15px;
+        }
+
+        .input-section {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2d3748;
+            font-size: 14px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 180px;
+            padding: 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        .spinner {
+            border: 3px solid #e2e8f0;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .error {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+            border-left: 4px solid #c53030;
+        }
+
+        .results {
+            margin-top: 32px;
+            display: none;
+        }
+
+        .overall-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 32px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .overall-score {
+            font-size: 56px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .overall-label {
+            font-size: 16px;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        .criterion-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .criterion-card {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .criterion-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .criterion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .criterion-title {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 15px;
+        }
+
+        .criterion-score {
+            font-size: 22px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.6s ease;
+            border-radius: 4px;
+        }
+
+        .criterion-details {
+            font-size: 13px;
+            color: #718096;
+            line-height: 1.6;
+        }
+
+        .detail-item {
+            margin: 4px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .detail-label {
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: #2d3748;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Communication Skills Scorer</h1>
+        <p class="subtitle">Analyze self-introduction transcripts based on communication rubric</p>
+
+        <div class="input-section">
+            <label for="transcript">Transcript</label>
+            <textarea id="transcript" placeholder="Paste your self-introduction transcript here..."></textarea>
+        </div>
+
+        <button class="btn" onclick="scoreTranscript()" id="analyzeBtn">Analyze Transcript</button>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <div>Analyzing transcript...</div>
+        </div>
+
+        <div class="error" id="error"></div>
+
+        <div class="results" id="results">
+            <div class="overall-card">
+                <div class="overall-score" id="overall-score"></div>
+                <div class="overall-label">Overall Score</div>
+            </div>
+
+            <div class="criterion-grid" id="criterion-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        async function scoreTranscript() {
+            const transcript = document.getElementById('transcript').value.trim();
+            const errorDiv = document.getElementById('error');
+            const resultsDiv = document.getElementById('results');
+            const loadingDiv = document.getElementById('loading');
+            const analyzeBtn = document.getElementById('analyzeBtn');
+
+            errorDiv.style.display = 'none';
+            resultsDiv.style.display = 'none';
+
+            if (!transcript) {
+                errorDiv.textContent = 'Please enter a transcript to analyze';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            loadingDiv.style.display = 'block';
+            analyzeBtn.disabled = true;
+
+            try {
+                const response = await fetch('/score', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ transcript })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Scoring failed');
+                }
+
+                displayResults(data);
+            } catch (error) {
+                errorDiv.textContent = error.message;
+                errorDiv.style.display = 'block';
+            } finally {
+                loadingDiv.style.display = 'none';
+                analyzeBtn.disabled = false;
+            }
+        }
+
+        function displayResults(data) {
+            const overallCard = document.querySelector('.overall-card');
+            document.getElementById('overall-score').textContent =
+                Math.round(data.overall_score) + ' / ' + data.max_score;
+
+            const existingBadge = overallCard.querySelector('.word-count-badge');
+            if (existingBadge) {
+                existingBadge.remove();
+            }
+
+            const wordCountBadge = document.createElement('div');
+            wordCountBadge.className = 'word-count-badge';
+            wordCountBadge.style.cssText = 'margin-top: 12px; font-size: 14px; opacity: 0.9;';
+            wordCountBadge.textContent = 'Transcript Length: ' + data.transcript_length + ' words';
+            overallCard.appendChild(wordCountBadge);
+
+            const breakdown = data.breakdown;
+            const criterionGrid = document.getElementById('criterion-grid');
+
+            criterionGrid.innerHTML = '';
+
+            addCriterion('Content & Structure', breakdown.content_structure, [
+                { label: 'Salutation', value: breakdown.content_structure.salutation.level },
+                { label: 'Keywords Found', value: breakdown.content_structure.keywords.must_have_count + '/' + 8 },
+                { label: 'Flow', value: breakdown.content_structure.flow.order_followed ? 'Good' : 'Needs Work' },
+                { label: 'Semantic Match', value: breakdown.content_structure.semantic_analysis.semantic_quality + ' (' + breakdown.content_structure.semantic_analysis.avg_similarity + ')' }
+            ]);
+
+
+            addCriterion('Speech Rate', breakdown.speech_rate, [
+                { label: 'WPM', value: breakdown.speech_rate.details.wpm },
+                { label: 'Category', value: breakdown.speech_rate.details.category },
+                { label: 'Word Count', value: breakdown.speech_rate.details.word_count }
+            ]);
+
+            addCriterion('Language & Grammar', breakdown.language_grammar, [
+                { label: 'Grammar Quality', value: (breakdown.language_grammar.grammar.grammar_quality * 100).toFixed(0) + '%' },
+                { label: 'Vocabulary (TTR)', value: breakdown.language_grammar.vocabulary.ttr },
+                { label: 'Errors', value: breakdown.language_grammar.grammar.errors }
+            ]);
+
+            addCriterion('Clarity', breakdown.clarity, [
+                { label: 'Filler Words', value: breakdown.clarity.details.filler_count },
+                { label: 'Filler Rate', value: breakdown.clarity.details.filler_rate.toFixed(2) + '%' }
+            ]);
+
+            addCriterion('Engagement', breakdown.engagement, [
+                { label: 'Sentiment', value: breakdown.engagement.details.compound >= 0.5 ? 'Positive' : 'Neutral' },
+                { label: 'Compound Score', value: breakdown.engagement.details.compound }
+            ]);
+
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function addCriterion(title, data, details) {
+            const percentage = (data.score / data.max) * 100;
+
+            const card = document.createElement('div');
+            card.className = 'criterion-card';
+
+            let detailsHTML = '';
+            details.forEach(item => {
+                detailsHTML += `
+                    <div class="detail-item">
+                        <span class="detail-label">${item.label}:</span>
+                        <span class="detail-value">${item.value}</span>
+                    </div>
+                `;
+            });
+
+            card.innerHTML = `
+                <div class="criterion-header">
+                    <div class="criterion-title">${title}</div>
+                    <div class="criterion-score">${Math.round(data.score)}/${data.max}</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${percentage}%"></div>
+                </div>
+                <div class="criterion-details">
+                    ${detailsHTML}
+                </div>
+            `;
+
+            document.getElementById('criterion-grid').appendChild(card);
+        }
+    </script>
+</body>
+
+</html>
