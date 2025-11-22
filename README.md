@@ -183,7 +183,7 @@ NirmaanAi/
 └── data/                 # Data files
 ```
 
-## 🛠 Technology Stack
+##  Technology Stack
 
 ### Core Framework
 - **Flask 3.0.0** - Web framework
@@ -203,7 +203,7 @@ NirmaanAi/
 ### Production
 - **gunicorn 21.2.0** - WSGI HTTP server
 
-## 🔬 Scoring Methodology
+##  Scoring Methodology
 
 ### 1. Content Structure (40 points)
 
